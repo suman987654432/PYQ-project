@@ -40,11 +40,22 @@ const Feedback = ({ isOpen, onClose }) => {
         return;
       }
 
+      // Log the token to confirm it's being retrieved correctly
+      console.log('Using token for feedback:', userToken ? 'Token found' : 'No token');
+
       const config = {
         headers: {
           'Authorization': `Bearer ${userToken}`
         }
       };
+
+      // Add a check to verify user is logged in before submitting
+      const userResponse = await axios.get('http://localhost:5000/api/user/profile', config);
+      if (!userResponse.data.success) {
+        toast.error('Unable to verify your account. Please log in again.');
+        setLoading(false);
+        return;
+      }
 
       const response = await axios.post(
         'http://localhost:5000/api/feedback',

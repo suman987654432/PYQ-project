@@ -13,6 +13,14 @@ exports.submitFeedback = async (req, res) => {
       });
     }
     
+    // Check if userId exists in request
+    if (!req.userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'User authentication failed. Please log in again.'
+      });
+    }
+    
     // Create new feedback with user ID from auth middleware
     const feedback = await Feedback.create({
       user: req.userId,
